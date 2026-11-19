@@ -5,6 +5,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.shekhar.trst01androidtask.R
 import com.shekhar.trst01androidtask.data.local.entity.EmployeeEntity
 import com.shekhar.trst01androidtask.databinding.ItemEmployeeBinding
 
@@ -36,6 +37,9 @@ class EmployeeAdapter : ListAdapter<EmployeeEntity, EmployeeAdapter.EmployeeView
 
             val isActive = employee.isActive == true
             binding.chipStatus.text = if (isActive) "Active" else "Inactive"
+            binding.chipStatus.setBackgroundResource(
+                if (isActive) R.drawable.bg_status_chip else R.drawable.bg_status_chip_inactive
+            )
         }
     }
 
