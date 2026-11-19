@@ -72,6 +72,13 @@ class EmployeeRepositoryImpl @Inject constructor(
         }
     }
 
+    override suspend fun generateNextEmployeeId(): Int {
+        return database.withTransaction {
+            val maxId = employeeDao.getMaxEmployeeId() ?: 0
+            if (maxId < 1000) 1001 else maxId + 1
+        }
+    }
+
     override suspend fun getEmployeeById(employeeId: Int): EmployeeEntity? {
         return employeeDao.getEmployeeById(employeeId)
     }

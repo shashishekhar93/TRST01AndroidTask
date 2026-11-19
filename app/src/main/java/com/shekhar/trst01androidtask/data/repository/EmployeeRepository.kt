@@ -19,9 +19,11 @@ interface EmployeeRepository {
     suspend fun refreshEmployees(): Result<Unit>
 
     // Employee CRUD
+    suspend fun generateNextEmployeeId(): Int
     suspend fun getEmployeeById(employeeId: Int): EmployeeEntity?
     fun observeEmployeeById(employeeId: Int): Flow<EmployeeEntity?>
     suspend fun insertEmployee(employee: EmployeeEntity): Result<Unit>
+
     suspend fun deleteEmployee(employee: EmployeeEntity): Result<Unit>
     suspend fun deleteEmployeeById(employeeId: Int): Result<Unit>
 

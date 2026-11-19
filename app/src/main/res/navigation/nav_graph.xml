@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/employeeListFragment">
+
+    <fragment
+        android:id="@+id/employeeListFragment"
+        android:name="com.shekhar.trst01androidtask.ui.list.EmployeeListFragment"
+        android:label="Employee List"
+        tools:layout="@layout/fragment_employee_list">
+        <action
+            android:id="@+id/action_employeeListFragment_to_employeeDetailsFragment"
+            app:destination="@id/employeeDetailsFragment"
+            app:enterAnim="@android:anim/fade_in"
+            app:exitAnim="@android:anim/fade_out"
+            app:popEnterAnim="@android:anim/fade_in"
+            app:popExitAnim="@android:anim/fade_out" />
+        <action
+            android:id="@+id/action_employeeListFragment_to_addEmployeeFragment"
+            app:destination="@id/addEmployeeFragment"
+            app:enterAnim="@android:anim/fade_in"
+            app:exitAnim="@android:anim/fade_out"
+            app:popEnterAnim="@android:anim/fade_in"
+            app:popExitAnim="@android:anim/fade_out" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/employeeDetailsFragment"
+        android:name="com.shekhar.trst01androidtask.ui.details.EmployeeDetailsFragment"
+        android:label="Employee Details"
+        tools:layout="@layout/fragment_employee_details">
+        <argument
+            android:name="employeeId"
+            app:argType="integer" />
+        <action
+            android:id="@+id/action_employeeDetailsFragment_to_documentPreviewFragment"
+            app:destination="@id/documentPreviewFragment"
+            app:enterAnim="@android:anim/fade_in"
+            app:exitAnim="@android:anim/fade_out"
+            app:popEnterAnim="@android:anim/fade_in"
+            app:popExitAnim="@android:anim/fade_out" />
+        <action
+            android:id="@+id/action_employeeDetailsFragment_to_editEmployeeFragment"
+            app:destination="@id/editEmployeeFragment"
+            app:enterAnim="@android:anim/fade_in"
+            app:exitAnim="@android:anim/fade_out"
+            app:popEnterAnim="@android:anim/fade_in"
+            app:popExitAnim="@android:anim/fade_out" />
+        <action
+            android:id="@+id/action_employeeDetailsFragment_to_deleteEmployeeBottomSheet"
+            app:destination="@id/deleteEmployeeBottomSheet" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/documentPreviewFragment"
+        android:name="com.shekhar.trst01androidtask.ui.preview.DocumentPreviewFragment"
+        android:label="Document Preview"
+        tools:layout="@layout/fragment_document_preview">
+        <argument
+            android:name="employeeId"
+            app:argType="integer" />
+        <argument
+            android:name="documentId"
+            app:argType="integer" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/addEmployeeFragment"
+        android:name="com.shekhar.trst01androidtask.ui.add.AddEmployeeFragment"
+        android:label="Add Employee"
+        tools:layout="@layout/fragment_add_employee" />
+
+    <fragment
+        android:id="@+id/editEmployeeFragment"
+        android:name="com.shekhar.trst01androidtask.ui.edit.EditEmployeeFragment"
+        android:label="Edit Employee"
+        tools:layout="@layout/fragment_edit_employee">
+        <argument
+            android:name="employeeId"
+            app:argType="integer" />
+    </fragment>
+
+    <dialog
+        android:id="@+id/deleteEmployeeBottomSheet"
+        android:name="com.shekhar.trst01androidtask.ui.delete.DeleteEmployeeBottomSheet"
+        android:label="Delete Employee"
+        tools:layout="@layout/dialog_delete_employee">
+        <argument
+            android:name="employeeId"
+            app:argType="integer" />
+    </dialog>
+
+</navigation>

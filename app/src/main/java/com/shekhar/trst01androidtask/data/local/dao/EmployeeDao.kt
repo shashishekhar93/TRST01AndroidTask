@@ -20,11 +20,17 @@ interface EmployeeDao {
     @Query("SELECT * FROM employees WHERE employeeId = :employeeId")
     fun observeEmployeeById(employeeId: Int): Flow<EmployeeEntity?>
 
+    @Query("SELECT MAX(employeeId) FROM employees")
+    suspend fun getMaxEmployeeId(): Int?
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertEmployee(employee: EmployeeEntity)
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertEmployees(employees: List<EmployeeEntity>)
+
+    //update employee
+
 
     @Delete
     suspend fun deleteEmployee(employee: EmployeeEntity)

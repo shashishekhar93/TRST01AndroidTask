@@ -21,6 +21,7 @@ import io.mockk.mockk
 import kotlinx.coroutines.test.runTest
 import okhttp3.ResponseBody.Companion.toResponseBody
 import org.junit.After
+import org.junit.Assert
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNotNull
 import org.junit.Assert.assertTrue
@@ -222,5 +223,68 @@ class EmployeeRepositoryTest {
         assertNotNull(preservedMapArea)
         assertEquals(2, preservedMapArea?.coordinates?.size)
         assertEquals(12.9716, preservedMapArea?.coordinates?.get(0)?.latitude ?: 0.0, 0.0001)
+    }
+
+    @Test
+    fun generateNextEmployeeId_calculatesNonConflictingId() = runTest {
+        val firstGeneratedId = repository.generateNextEmployeeId()
+        assertEquals(1001, firstGeneratedId)
+
+        val employee1 = EmployeeEntity(
+            employeeId = firstGeneratedId,
+            employeeName = "Emp 1",
+            departmentId = 1,
+            managerId = null,
+            isActive = true,
+            branchId = 1,
+            createdDate = "2023-01-01",
+            updatedDate = null
+        )
+        repository.insertEmployee(employee1)
+
+        val secondGeneratedId = repository.generateNextEmployeeId()
+        assertEquals(1002, secondGeneratedId)
+    }
+
+    @Test
+    fun deleteEmployeeById_cascadesDeletionOfAssociatedDocumentsAndMapArea() = runTest {
+        val empId = 606
+        val employee = EmployeeEntity(
+            employeeId = empId,
+            employeeName = "Delete Cascade Target",
+            departmentId = 1,
+            managerId = null,
+            isActive = true,
+            branchId = 1,
+            createdDate = "2023-06-01",
+            updatedDate = null
+        )
+        repository.insertEmployee(employee)
+
+        val doc = DocumentEntity(
+            documentId = 60,
+            employeeId = empId,
+            documentName = "ID Card",
+            documentType = "ID",
+            isVerified = true,
+            createdDate = "2023-06-01",
+            updatedDate = null,
+            documentUrl = "http://example.com/doc",
+            thumbnailUrl = null
+        )
+        repository.saveDocument(doc)
+
+        val mapArea = MapAreaEntity(
+            employeeId = empId,
+            coordinates = listOf(LatLngPoint(10.0, 20.0))
+        )
+        mapAreaDao.insertMapArea(mapArea)
+
+        val deleteResult = repository.deleteEmployeeById(empId)
+        assertTrue(deleteResult is Result.Success)
+
+        Assert.assertNull(repository.getEmployeeById(empId))
+        assertTrue(repository.getDocumentsForEmployee(empId).isEmpty())
+        Assert.assertNull(repository.getMapAreaForEmployee(empId))
     }
 }
