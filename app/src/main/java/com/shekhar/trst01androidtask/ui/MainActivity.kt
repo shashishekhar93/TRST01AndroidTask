@@ -1,4 +1,4 @@
-package com.shekhar.trst01androidtask
+package com.shekhar.trst01androidtask.ui
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
