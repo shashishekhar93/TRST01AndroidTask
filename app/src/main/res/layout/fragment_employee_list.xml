@@ -1,35 +1,44 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/rootLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/background"
     android:orientation="vertical">
 
     <TextView
         android:id="@+id/tvHeaderTitle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:fontFamily="@font/outfit"
         android:paddingHorizontal="16dp"
         android:paddingTop="16dp"
         android:paddingBottom="8dp"
         android:text="TRST01 Employee Directory"
-        android:textColor="@android:color/black"
+        android:textColor="@color/text_primary"
         android:textSize="22sp"
         android:textStyle="bold" />
 
     <EditText
         android:id="@+id/etSearch"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="52dp"
         android:layout_marginHorizontal="16dp"
         android:layout_marginBottom="8dp"
-        android:background="@android:drawable/editbox_background"
+        android:background="@drawable/bg_input"
         android:drawableStart="@android:drawable/ic_menu_search"
-        android:drawablePadding="8dp"
-        android:hint="Search employees by name or department..."
+        android:drawablePadding="10dp"
+        android:drawableTint="@color/text_secondary"
+        android:fontFamily="@font/outfit"
+        android:hint="Search employees..."
         android:imeOptions="actionSearch"
         android:inputType="text"
         android:maxLines="1"
-        android:padding="12dp"
+        android:paddingHorizontal="14dp"
+        android:textColor="@color/text_primary"
+        android:textColorHint="@color/text_secondary"
         android:textSize="14sp" />
 
     <HorizontalScrollView
@@ -38,9 +47,9 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"
         android:fillViewport="false"
-        android:scrollbars="none"
         android:paddingStart="16dp"
-        android:paddingEnd="16dp">
+        android:paddingEnd="16dp"
+        android:scrollbars="none">
 
         <LinearLayout
             android:id="@+id/layoutBranchTabs"
@@ -51,7 +60,6 @@
 
     </HorizontalScrollView>
 
-
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
         android:id="@+id/swipeRefreshLayout"
         android:layout_width="match_parent"
@@ -59,6 +67,7 @@
         android:layout_weight="1">
 
         <FrameLayout
+            android:id="@+id/contentContainer"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
@@ -67,7 +76,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:clipToPadding="false"
-                android:paddingVertical="8dp" />
+                android:paddingVertical="4dp" />
 
             <include
                 android:id="@+id/shimmerView"
@@ -84,27 +93,30 @@
                 android:visibility="gone">
 
                 <ImageView
-                    android:layout_width="72dp"
-                    android:layout_height="72dp"
-                    android:alpha="0.5"
-                    android:src="@android:drawable/ic_menu_myplaces" />
+                    android:layout_width="64dp"
+                    android:layout_height="64dp"
+                    android:alpha="0.4"
+                    android:src="@android:drawable/ic_menu_myplaces"
+                    app:tint="@color/text_secondary" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="16dp"
+                    android:fontFamily="@font/outfit"
                     android:text="No Employees Found"
-                    android:textColor="@android:color/black"
+                    android:textColor="@color/text_primary"
                     android:textSize="18sp"
                     android:textStyle="bold" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
+                    android:layout_marginTop="6dp"
+                    android:fontFamily="@font/outfit"
                     android:gravity="center"
                     android:text="There are no employees available in the directory right now."
-                    android:textColor="@android:color/darker_gray"
+                    android:textColor="@color/text_secondary"
                     android:textSize="14sp" />
 
             </LinearLayout>
@@ -119,41 +131,45 @@
                 android:visibility="gone">
 
                 <ImageView
-                    android:layout_width="72dp"
-                    android:layout_height="72dp"
-                    android:alpha="0.5"
-                    android:src="@android:drawable/stat_notify_error" />
+                    android:layout_width="64dp"
+                    android:layout_height="64dp"
+                    android:alpha="0.4"
+                    android:src="@android:drawable/stat_notify_error"
+                    app:tint="@color/error" />
 
                 <TextView
                     android:id="@+id/tvErrorMessage"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="16dp"
+                    android:fontFamily="@font/outfit"
                     android:gravity="center"
                     android:text="Failed to load employees"
-                    android:textColor="@android:color/black"
+                    android:textColor="@color/text_primary"
                     android:textSize="18sp"
                     android:textStyle="bold" />
 
                 <Button
                     android:id="@+id/btnRetry"
+                    style="@style/Widget.TRST.Button.Primary"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="16dp"
+                    android:paddingHorizontal="24dp"
                     android:text="Retry" />
 
             </LinearLayout>
 
             <com.google.android.material.floatingactionbutton.FloatingActionButton
                 android:id="@+id/fabAddEmployee"
-                xmlns:app="http://schemas.android.com/apk/res-auto"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="bottom|end"
                 android:layout_margin="16dp"
                 android:contentDescription="Add Employee"
                 android:src="@android:drawable/ic_input_add"
-                app:tint="@android:color/white" />
+                app:backgroundTint="@color/primary"
+                app:tint="@color/surface" />
 
         </FrameLayout>
 

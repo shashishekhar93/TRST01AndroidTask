@@ -2,14 +2,18 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/rootLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/background"
     android:orientation="vertical">
 
     <!-- Custom Header Bar -->
     <LinearLayout
+        android:id="@+id/headerBar"
         android:layout_width="match_parent"
-        android:layout_height="56dp"
+        android:minHeight="56dp"
+        android:layout_height="wrap_content"
         android:gravity="center_vertical"
         android:orientation="horizontal"
         android:paddingHorizontal="8dp">
@@ -20,15 +24,17 @@
             android:layout_height="48dp"
             android:background="?attr/selectableItemBackgroundBorderless"
             android:contentDescription="Back"
-            android:src="@android:drawable/ic_menu_revert" />
+            android:src="@android:drawable/ic_menu_revert"
+            app:tint="@color/text_primary" />
 
         <TextView
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
             android:layout_weight="1"
+            android:fontFamily="@font/outfit"
             android:text="Employee Details"
-            android:textColor="@android:color/black"
+            android:textColor="@color/text_primary"
             android:textSize="20sp"
             android:textStyle="bold" />
 
@@ -38,7 +44,8 @@
             android:layout_height="48dp"
             android:background="?attr/selectableItemBackgroundBorderless"
             android:contentDescription="Edit Employee"
-            android:src="@android:drawable/ic_menu_edit" />
+            android:src="@android:drawable/ic_menu_edit"
+            app:tint="@color/primary" />
 
         <ImageButton
             android:id="@+id/btnDelete"
@@ -46,7 +53,8 @@
             android:layout_height="48dp"
             android:background="?attr/selectableItemBackgroundBorderless"
             android:contentDescription="Delete Employee"
-            android:src="@android:drawable/ic_menu_delete" />
+            android:src="@android:drawable/ic_menu_delete"
+            app:tint="@color/error" />
 
     </LinearLayout>
 
@@ -60,6 +68,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
+            android:indeterminateTint="@color/primary"
             android:visibility="gone" />
 
         <!-- Error / Not Found State -->
@@ -73,27 +82,31 @@
             android:visibility="gone">
 
             <ImageView
-                android:layout_width="72dp"
-                android:layout_height="72dp"
-                android:alpha="0.5"
-                android:src="@android:drawable/stat_notify_error" />
+                android:layout_width="64dp"
+                android:layout_height="64dp"
+                android:alpha="0.4"
+                android:src="@android:drawable/stat_notify_error"
+                app:tint="@color/error" />
 
             <TextView
                 android:id="@+id/tvErrorMessage"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
+                android:fontFamily="@font/outfit"
                 android:gravity="center"
                 android:text="Employee Not Found"
-                android:textColor="@android:color/black"
+                android:textColor="@color/text_primary"
                 android:textSize="18sp"
                 android:textStyle="bold" />
 
             <Button
                 android:id="@+id/btnErrorBack"
+                style="@style/Widget.TRST.Button.Primary"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
+                android:paddingHorizontal="24dp"
                 android:text="Go Back" />
 
         </LinearLayout>
@@ -118,8 +131,9 @@
                     android:layout_height="wrap_content"
                     android:layout_marginHorizontal="16dp"
                     android:layout_marginTop="12dp"
-                    app:cardCornerRadius="12dp"
-                    app:cardElevation="3dp">
+                    app:cardBackgroundColor="@color/surface"
+                    app:cardCornerRadius="14dp"
+                    app:cardElevation="2dp">
 
                     <androidx.constraintlayout.widget.ConstraintLayout
                         android:layout_width="match_parent"
@@ -131,10 +145,11 @@
                             android:layout_width="64dp"
                             android:layout_height="64dp"
                             android:background="@drawable/bg_avatar_circle"
-                            android:fontFamily="sans-serif-medium"
+                            android:fontFamily="@font/outfit"
                             android:gravity="center"
-                            android:textColor="@android:color/white"
+                            android:textColor="@color/primary_dark"
                             android:textSize="24sp"
+                            android:textStyle="bold"
                             app:layout_constraintBottom_toBottomOf="parent"
                             app:layout_constraintStart_toStartOf="parent"
                             app:layout_constraintTop_toTopOf="parent"
@@ -146,8 +161,8 @@
                             android:layout_height="wrap_content"
                             android:layout_marginStart="16dp"
                             android:layout_marginEnd="8dp"
-                            android:fontFamily="sans-serif-medium"
-                            android:textColor="@android:color/black"
+                            android:fontFamily="@font/outfit"
+                            android:textColor="@color/text_primary"
                             android:textSize="20sp"
                             android:textStyle="bold"
                             app:layout_constraintEnd_toStartOf="@+id/chipStatus"
@@ -161,7 +176,8 @@
                             android:layout_height="wrap_content"
                             android:layout_marginStart="16dp"
                             android:layout_marginTop="4dp"
-                            android:textColor="@android:color/darker_gray"
+                            android:fontFamily="@font/outfit"
+                            android:textColor="@color/text_secondary"
                             android:textSize="14sp"
                             app:layout_constraintStart_toEndOf="@+id/tvAvatar"
                             app:layout_constraintTop_toBottomOf="@+id/tvEmployeeName"
@@ -172,9 +188,10 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:background="@drawable/bg_status_chip"
+                            android:fontFamily="@font/outfit"
                             android:paddingHorizontal="12dp"
-                            android:paddingVertical="6dp"
-                            android:textColor="@android:color/white"
+                            android:paddingVertical="5dp"
+                            android:textColor="@color/primary_dark"
                             android:textSize="12sp"
                             app:layout_constraintEnd_toEndOf="parent"
                             app:layout_constraintTop_toTopOf="parent"
@@ -190,7 +207,8 @@
                     android:layout_height="wrap_content"
                     android:layout_marginHorizontal="16dp"
                     android:layout_marginTop="16dp"
-                    app:cardCornerRadius="12dp"
+                    app:cardBackgroundColor="@color/surface"
+                    app:cardCornerRadius="14dp"
                     app:cardElevation="2dp">
 
                     <LinearLayout
@@ -203,8 +221,9 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginBottom="12dp"
+                            android:fontFamily="@font/outfit"
                             android:text="Work Details"
-                            android:textColor="@android:color/black"
+                            android:textColor="@color/text_primary"
                             android:textSize="16sp"
                             android:textStyle="bold" />
 
@@ -212,20 +231,22 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:orientation="horizontal"
-                            android:paddingVertical="4dp">
+                            android:paddingVertical="5dp">
 
                             <TextView
                                 android:layout_width="120dp"
                                 android:layout_height="wrap_content"
+                                android:fontFamily="@font/outfit"
                                 android:text="Department ID:"
-                                android:textColor="@android:color/darker_gray"
+                                android:textColor="@color/text_secondary"
                                 android:textSize="14sp" />
 
                             <TextView
                                 android:id="@+id/tvDepartmentId"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:textColor="@android:color/black"
+                                android:fontFamily="@font/outfit"
+                                android:textColor="@color/text_primary"
                                 android:textSize="14sp"
                                 android:textStyle="bold"
                                 tools:text="5" />
@@ -235,20 +256,22 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:orientation="horizontal"
-                            android:paddingVertical="4dp">
+                            android:paddingVertical="5dp">
 
                             <TextView
                                 android:layout_width="120dp"
                                 android:layout_height="wrap_content"
+                                android:fontFamily="@font/outfit"
                                 android:text="Branch ID:"
-                                android:textColor="@android:color/darker_gray"
+                                android:textColor="@color/text_secondary"
                                 android:textSize="14sp" />
 
                             <TextView
                                 android:id="@+id/tvBranchId"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:textColor="@android:color/black"
+                                android:fontFamily="@font/outfit"
+                                android:textColor="@color/text_primary"
                                 android:textSize="14sp"
                                 android:textStyle="bold"
                                 tools:text="2" />
@@ -258,20 +281,22 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:orientation="horizontal"
-                            android:paddingVertical="4dp">
+                            android:paddingVertical="5dp">
 
                             <TextView
                                 android:layout_width="120dp"
                                 android:layout_height="wrap_content"
+                                android:fontFamily="@font/outfit"
                                 android:text="Manager ID:"
-                                android:textColor="@android:color/darker_gray"
+                                android:textColor="@color/text_secondary"
                                 android:textSize="14sp" />
 
                             <TextView
                                 android:id="@+id/tvManagerId"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:textColor="@android:color/black"
+                                android:fontFamily="@font/outfit"
+                                android:textColor="@color/text_primary"
                                 android:textSize="14sp"
                                 tools:text="1" />
                         </LinearLayout>
@@ -280,26 +305,28 @@
                             android:layout_width="match_parent"
                             android:layout_height="1dp"
                             android:layout_marginVertical="8dp"
-                            android:background="#E0E0E0" />
+                            android:background="@color/divider" />
 
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:orientation="horizontal"
-                            android:paddingVertical="4dp">
+                            android:paddingVertical="5dp">
 
                             <TextView
                                 android:layout_width="120dp"
                                 android:layout_height="wrap_content"
+                                android:fontFamily="@font/outfit"
                                 android:text="Created Date:"
-                                android:textColor="@android:color/darker_gray"
+                                android:textColor="@color/text_secondary"
                                 android:textSize="14sp" />
 
                             <TextView
                                 android:id="@+id/tvCreatedDate"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:textColor="@android:color/black"
+                                android:fontFamily="@font/outfit"
+                                android:textColor="@color/text_primary"
                                 android:textSize="14sp"
                                 tools:text="2023-01-01" />
                         </LinearLayout>
@@ -308,20 +335,22 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:orientation="horizontal"
-                            android:paddingVertical="4dp">
+                            android:paddingVertical="5dp">
 
                             <TextView
                                 android:layout_width="120dp"
                                 android:layout_height="wrap_content"
+                                android:fontFamily="@font/outfit"
                                 android:text="Updated Date:"
-                                android:textColor="@android:color/darker_gray"
+                                android:textColor="@color/text_secondary"
                                 android:textSize="14sp" />
 
                             <TextView
                                 android:id="@+id/tvUpdatedDate"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:textColor="@android:color/black"
+                                android:fontFamily="@font/outfit"
+                                android:textColor="@color/text_primary"
                                 android:textSize="14sp"
                                 tools:text="2023-06-01" />
                         </LinearLayout>
@@ -336,7 +365,8 @@
                     android:layout_height="wrap_content"
                     android:layout_marginHorizontal="16dp"
                     android:layout_marginTop="16dp"
-                    app:cardCornerRadius="12dp"
+                    app:cardBackgroundColor="@color/surface"
+                    app:cardCornerRadius="14dp"
                     app:cardElevation="2dp">
 
                     <LinearLayout
@@ -348,8 +378,9 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:fontFamily="@font/outfit"
                             android:text="Employee Map Area"
-                            android:textColor="@android:color/black"
+                            android:textColor="@color/text_primary"
                             android:textSize="16sp"
                             android:textStyle="bold" />
 
@@ -364,15 +395,17 @@
                                 android:layout_width="0dp"
                                 android:layout_height="wrap_content"
                                 android:layout_weight="1"
+                                android:fontFamily="@font/outfit"
                                 android:text="Status:"
-                                android:textColor="@android:color/darker_gray"
+                                android:textColor="@color/text_secondary"
                                 android:textSize="14sp" />
 
                             <TextView
                                 android:id="@+id/tvMapAreaStatus"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:textColor="@android:color/black"
+                                android:fontFamily="@font/outfit"
+                                android:textColor="@color/text_primary"
                                 android:textSize="14sp"
                                 android:textStyle="bold"
                                 tools:text="No area saved" />
@@ -381,6 +414,7 @@
 
                         <Button
                             android:id="@+id/btnOpenMapArea"
+                            style="@style/Widget.TRST.Button.Primary"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="12dp"
@@ -403,8 +437,9 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
+                        android:fontFamily="@font/outfit"
                         android:text="Employee Documents"
-                        android:textColor="@android:color/black"
+                        android:textColor="@color/text_primary"
                         android:textSize="18sp"
                         android:textStyle="bold" />
 
@@ -413,9 +448,10 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:background="@drawable/bg_status_chip"
+                        android:fontFamily="@font/outfit"
                         android:paddingHorizontal="10dp"
                         android:paddingVertical="4dp"
-                        android:textColor="@android:color/white"
+                        android:textColor="@color/primary_dark"
                         android:textSize="12sp"
                         tools:text="2 Documents" />
 
@@ -435,14 +471,16 @@
                         android:layout_width="48dp"
                         android:layout_height="48dp"
                         android:alpha="0.4"
-                        android:src="@android:drawable/ic_menu_agenda" />
+                        android:src="@android:drawable/ic_menu_agenda"
+                        app:tint="@color/text_secondary" />
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="8dp"
+                        android:fontFamily="@font/outfit"
                         android:text="No Documents Available"
-                        android:textColor="@android:color/darker_gray"
+                        android:textColor="@color/text_secondary"
                         android:textSize="14sp" />
 
                 </LinearLayout>

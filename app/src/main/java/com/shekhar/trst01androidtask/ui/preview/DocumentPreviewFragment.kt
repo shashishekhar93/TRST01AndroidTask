@@ -6,6 +6,10 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.content.ContextCompat
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.updatePadding
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
@@ -47,6 +51,7 @@ class DocumentPreviewFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        setupInsets(view)
         binding.btnBack.setOnClickListener {
             findNavController().navigateUp()
         }
@@ -55,6 +60,17 @@ class DocumentPreviewFragment : Fragment() {
         }
 
         observeViewModel()
+    }
+
+    private fun setupInsets(view: View) {
+        ViewCompat.setOnApplyWindowInsetsListener(view) { _, insets ->
+            val statusBarInset = insets.getInsets(WindowInsetsCompat.Type.statusBars())
+            val navBarInset = insets.getInsets(WindowInsetsCompat.Type.navigationBars())
+
+            binding.headerBar.updatePadding(top = statusBarInset.top)
+            binding.layoutContent.updatePadding(bottom = navBarInset.bottom)
+            insets
+        }
     }
 
     private fun observeViewModel() {
@@ -100,6 +116,7 @@ class DocumentPreviewFragment : Fragment() {
     }
 
     private fun bindDocument(document: DocumentEntity) {
+        val context = requireContext()
         val title = document.documentName ?: "Document Preview"
         binding.tvTitle.text = title
         binding.tvDocumentName.text = title
@@ -110,9 +127,13 @@ class DocumentPreviewFragment : Fragment() {
 
         val isVerified = document.isVerified == true
         binding.chipStatus.text = if (isVerified) "Verified" else "Pending"
-        binding.chipStatus.setBackgroundResource(
-            if (isVerified) R.drawable.bg_status_chip else R.drawable.bg_status_chip_inactive
-        )
+        if (isVerified) {
+            binding.chipStatus.setBackgroundResource(R.drawable.bg_status_chip)
+            binding.chipStatus.setTextColor(ContextCompat.getColor(context, R.color.primary_dark))
+        } else {
+            binding.chipStatus.setBackgroundResource(R.drawable.bg_status_chip_inactive)
+            binding.chipStatus.setTextColor(ContextCompat.getColor(context, R.color.text_secondary))
+        }
 
         val (imageUrl, isPdf) = evaluateDocumentUrl(document)
 

@@ -2,6 +2,7 @@ package com.shekhar.trst01androidtask.ui.details
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
@@ -30,6 +31,7 @@ class DocumentAdapter(
     ) : RecyclerView.ViewHolder(binding.root) {
 
         fun bind(document: DocumentEntity) {
+            val context = itemView.context
             binding.tvDocumentName.text = document.documentName ?: "Untitled Document"
             binding.tvDocumentType.text = "Type: ${document.documentType ?: "N/A"}"
             val dateText = DateFormatter.formatDate(document.createdDate ?: document.updatedDate)
@@ -37,17 +39,21 @@ class DocumentAdapter(
 
             val isVerified = document.isVerified == true
             binding.chipVerification.text = if (isVerified) "Verified" else "Pending"
-            binding.chipVerification.setBackgroundResource(
-                if (isVerified) R.drawable.bg_status_chip else R.drawable.bg_status_chip_inactive
-            )
+            if (isVerified) {
+                binding.chipVerification.setBackgroundResource(R.drawable.bg_status_chip)
+                binding.chipVerification.setTextColor(ContextCompat.getColor(context, R.color.primary_dark))
+            } else {
+                binding.chipVerification.setBackgroundResource(R.drawable.bg_status_chip_inactive)
+                binding.chipVerification.setTextColor(ContextCompat.getColor(context, R.color.text_secondary))
+            }
 
             val imageUrl = document.thumbnailUrl.takeIf { !it.isNullResourceOrBlank() }
                 ?: document.documentUrl.takeIf { !it.isNullResourceOrBlank() }
 
             Glide.with(binding.ivThumbnail.context)
                 .load(imageUrl)
-                .placeholder(android.R.drawable.ic_menu_gallery)
-                .error(android.R.drawable.ic_menu_gallery)
+                .placeholder(R.drawable.bg_shimmer_placeholder)
+                .error(R.drawable.bg_shimmer_placeholder)
                 .centerCrop()
                 .into(binding.ivThumbnail)
 

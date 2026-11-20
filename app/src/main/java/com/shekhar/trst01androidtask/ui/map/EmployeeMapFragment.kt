@@ -7,6 +7,9 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.updatePadding
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
@@ -60,9 +63,21 @@ class EmployeeMapFragment : Fragment(), OnMapReadyCallback {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        setupInsets(view)
         setupUI()
         initMap()
         observeViewModel()
+    }
+
+    private fun setupInsets(view: View) {
+        ViewCompat.setOnApplyWindowInsetsListener(view) { _, insets ->
+            val statusBarInset = insets.getInsets(WindowInsetsCompat.Type.statusBars())
+            val navBarInset = insets.getInsets(WindowInsetsCompat.Type.navigationBars())
+
+            binding.headerBar.updatePadding(top = statusBarInset.top)
+            binding.layoutControlsInner.updatePadding(bottom = navBarInset.bottom + dpToPx(16))
+            insets
+        }
     }
 
     private fun setupUI() {
@@ -228,7 +243,7 @@ class EmployeeMapFragment : Fragment(), OnMapReadyCallback {
                 .title("Point ${index + 1}")
                 .icon(
                     BitmapDescriptorFactory.defaultMarker(
-                        if (isSelected) BitmapDescriptorFactory.HUE_AZURE else BitmapDescriptorFactory.HUE_RED
+                        if (isSelected) BitmapDescriptorFactory.HUE_AZURE else BitmapDescriptorFactory.HUE_GREEN
                     )
                 )
 
@@ -239,17 +254,20 @@ class EmployeeMapFragment : Fragment(), OnMapReadyCallback {
             }
         }
 
+        val primarySage = Color.parseColor("#557B45")
+        val translucentSage = Color.parseColor("#33557B45")
+
         if (latLngs.size < 3) {
             val polylineOptions = PolylineOptions()
                 .addAll(latLngs)
-                .color(Color.BLUE)
+                .color(primarySage)
                 .width(6f)
             currentPolyline = map.addPolyline(polylineOptions)
         } else {
             val polygonOptions = PolygonOptions()
                 .addAll(latLngs)
-                .strokeColor(Color.parseColor("#1E88E5"))
-                .fillColor(Color.parseColor("#331E88E5"))
+                .strokeColor(primarySage)
+                .fillColor(translucentSage)
                 .strokeWidth(6f)
             currentPolygon = map.addPolygon(polygonOptions)
         }
@@ -292,6 +310,10 @@ class EmployeeMapFragment : Fragment(), OnMapReadyCallback {
         } else {
             findNavController().navigateUp()
         }
+    }
+
+    private fun dpToPx(value: Int): Int {
+        return (value * resources.displayMetrics.density).toInt()
     }
 
     override fun onDestroyView() {

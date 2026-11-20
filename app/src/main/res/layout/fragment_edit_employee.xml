@@ -2,12 +2,15 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/rootLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/background"
     android:orientation="vertical">
 
     <!-- Header Bar -->
     <LinearLayout
+        android:id="@+id/headerBar"
         android:layout_width="match_parent"
         android:layout_height="56dp"
         android:gravity="center_vertical"
@@ -20,15 +23,17 @@
             android:layout_height="48dp"
             android:background="?attr/selectableItemBackgroundBorderless"
             android:contentDescription="Back"
-            android:src="@android:drawable/ic_menu_revert" />
+            android:src="@android:drawable/ic_menu_revert"
+            app:tint="@color/text_primary" />
 
         <TextView
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
             android:layout_weight="1"
+            android:fontFamily="@font/outfit"
             android:text="Edit Employee"
-            android:textColor="@android:color/black"
+            android:textColor="@color/text_primary"
             android:textSize="20sp"
             android:textStyle="bold" />
 
@@ -44,6 +49,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
+            android:indeterminateTint="@color/primary"
             android:visibility="gone" />
 
         <!-- Not Found / Error State -->
@@ -57,27 +63,31 @@
             android:visibility="gone">
 
             <ImageView
-                android:layout_width="72dp"
-                android:layout_height="72dp"
-                android:alpha="0.5"
-                android:src="@android:drawable/stat_notify_error" />
+                android:layout_width="64dp"
+                android:layout_height="64dp"
+                android:alpha="0.4"
+                android:src="@android:drawable/stat_notify_error"
+                app:tint="@color/error" />
 
             <TextView
                 android:id="@+id/tvErrorMessage"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
+                android:fontFamily="@font/outfit"
                 android:gravity="center"
                 android:text="Employee Not Found"
-                android:textColor="@android:color/black"
+                android:textColor="@color/text_primary"
                 android:textSize="18sp"
                 android:textStyle="bold" />
 
             <Button
                 android:id="@+id/btnErrorBack"
+                style="@style/Widget.TRST.Button.Primary"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
+                android:paddingHorizontal="24dp"
                 android:text="Go Back" />
 
         </LinearLayout>
@@ -99,8 +109,9 @@
                 <androidx.cardview.widget.CardView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    app:cardCornerRadius="12dp"
-                    app:cardElevation="3dp">
+                    app:cardBackgroundColor="@color/surface"
+                    app:cardCornerRadius="14dp"
+                    app:cardElevation="2dp">
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -111,8 +122,9 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:fontFamily="@font/outfit"
                             android:text="Employee Information"
-                            android:textColor="@android:color/black"
+                            android:textColor="@color/text_primary"
                             android:textSize="18sp"
                             android:textStyle="bold" />
 
@@ -121,7 +133,8 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="4dp"
-                            android:textColor="@android:color/darker_gray"
+                            android:fontFamily="@font/outfit"
+                            android:textColor="@color/text_secondary"
                             android:textSize="13sp"
                             tools:text="Editing details for Employee ID: #101" />
 
@@ -130,29 +143,34 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="16dp"
+                            android:fontFamily="@font/outfit"
                             android:text="Employee Name *"
-                            android:textColor="@android:color/black"
+                            android:textColor="@color/text_primary"
                             android:textSize="14sp"
                             android:textStyle="bold" />
 
                         <EditText
                             android:id="@+id/etEmployeeName"
                             android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
+                            android:layout_height="52dp"
                             android:layout_marginTop="6dp"
-                            android:background="@android:drawable/editbox_background"
+                            android:background="@drawable/bg_input"
+                            android:fontFamily="@font/outfit"
                             android:hint="e.g. Alice Johnson"
                             android:imeOptions="actionNext"
                             android:inputType="textPersonName"
-                            android:padding="12dp"
+                            android:paddingHorizontal="14dp"
+                            android:textColor="@color/text_primary"
+                            android:textColorHint="@color/text_secondary"
                             android:textSize="14sp" />
 
                         <TextView
                             android:id="@+id/tvErrorName"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginTop="2dp"
-                            android:textColor="@android:color/holo_red_dark"
+                            android:layout_marginTop="4dp"
+                            android:fontFamily="@font/outfit"
+                            android:textColor="@color/error"
                             android:textSize="12sp"
                             android:visibility="gone"
                             tools:text="Employee name is required"
@@ -163,29 +181,34 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="16dp"
+                            android:fontFamily="@font/outfit"
                             android:text="Department ID *"
-                            android:textColor="@android:color/black"
+                            android:textColor="@color/text_primary"
                             android:textSize="14sp"
                             android:textStyle="bold" />
 
                         <EditText
                             android:id="@+id/etDepartmentId"
                             android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
+                            android:layout_height="52dp"
                             android:layout_marginTop="6dp"
-                            android:background="@android:drawable/editbox_background"
+                            android:background="@drawable/bg_input"
+                            android:fontFamily="@font/outfit"
                             android:hint="e.g. 1"
                             android:imeOptions="actionNext"
                             android:inputType="number"
-                            android:padding="12dp"
+                            android:paddingHorizontal="14dp"
+                            android:textColor="@color/text_primary"
+                            android:textColorHint="@color/text_secondary"
                             android:textSize="14sp" />
 
                         <TextView
                             android:id="@+id/tvErrorDepartmentId"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginTop="2dp"
-                            android:textColor="@android:color/holo_red_dark"
+                            android:layout_marginTop="4dp"
+                            android:fontFamily="@font/outfit"
+                            android:textColor="@color/error"
                             android:textSize="12sp"
                             android:visibility="gone"
                             tools:text="Department ID must be a positive number"
@@ -196,29 +219,34 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="16dp"
+                            android:fontFamily="@font/outfit"
                             android:text="Branch ID *"
-                            android:textColor="@android:color/black"
+                            android:textColor="@color/text_primary"
                             android:textSize="14sp"
                             android:textStyle="bold" />
 
                         <EditText
                             android:id="@+id/etBranchId"
                             android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
+                            android:layout_height="52dp"
                             android:layout_marginTop="6dp"
-                            android:background="@android:drawable/editbox_background"
+                            android:background="@drawable/bg_input"
+                            android:fontFamily="@font/outfit"
                             android:hint="e.g. 1"
                             android:imeOptions="actionNext"
                             android:inputType="number"
-                            android:padding="12dp"
+                            android:paddingHorizontal="14dp"
+                            android:textColor="@color/text_primary"
+                            android:textColorHint="@color/text_secondary"
                             android:textSize="14sp" />
 
                         <TextView
                             android:id="@+id/tvErrorBranchId"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginTop="2dp"
-                            android:textColor="@android:color/holo_red_dark"
+                            android:layout_marginTop="4dp"
+                            android:fontFamily="@font/outfit"
+                            android:textColor="@color/error"
                             android:textSize="12sp"
                             android:visibility="gone"
                             tools:text="Branch ID must be a positive number"
@@ -229,29 +257,34 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="16dp"
+                            android:fontFamily="@font/outfit"
                             android:text="Manager ID (Optional)"
-                            android:textColor="@android:color/black"
+                            android:textColor="@color/text_primary"
                             android:textSize="14sp"
                             android:textStyle="bold" />
 
                         <EditText
                             android:id="@+id/etManagerId"
                             android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
+                            android:layout_height="52dp"
                             android:layout_marginTop="6dp"
-                            android:background="@android:drawable/editbox_background"
+                            android:background="@drawable/bg_input"
+                            android:fontFamily="@font/outfit"
                             android:hint="e.g. 101"
                             android:imeOptions="actionDone"
                             android:inputType="number"
-                            android:padding="12dp"
+                            android:paddingHorizontal="14dp"
+                            android:textColor="@color/text_primary"
+                            android:textColorHint="@color/text_secondary"
                             android:textSize="14sp" />
 
                         <TextView
                             android:id="@+id/tvErrorManagerId"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginTop="2dp"
-                            android:textColor="@android:color/holo_red_dark"
+                            android:layout_marginTop="4dp"
+                            android:fontFamily="@font/outfit"
+                            android:textColor="@color/error"
                             android:textSize="12sp"
                             android:visibility="gone"
                             tools:text="Manager ID must be a valid number"
@@ -269,8 +302,9 @@
                                 android:layout_width="0dp"
                                 android:layout_height="wrap_content"
                                 android:layout_weight="1"
+                                android:fontFamily="@font/outfit"
                                 android:text="Active Employee Status"
-                                android:textColor="@android:color/black"
+                                android:textColor="@color/text_primary"
                                 android:textSize="15sp"
                                 android:textStyle="bold" />
 
@@ -278,7 +312,9 @@
                                 android:id="@+id/switchIsActive"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:checked="true" />
+                                android:checked="true"
+                                app:thumbTint="@color/primary"
+                                app:trackTint="@color/primary_light" />
 
                         </LinearLayout>
 
@@ -288,9 +324,10 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="16dp"
-                            android:background="#FFEBEE"
+                            android:background="@drawable/bg_status_chip_inactive"
+                            android:fontFamily="@font/outfit"
                             android:padding="12dp"
-                            android:textColor="@android:color/holo_red_dark"
+                            android:textColor="@color/error"
                             android:textSize="14sp"
                             android:visibility="gone"
                             tools:text="Failed to update employee. Please try again."
@@ -299,12 +336,11 @@
                         <!-- Submit Button -->
                         <Button
                             android:id="@+id/btnSaveEmployee"
+                            style="@style/Widget.TRST.Button.Primary"
                             android:layout_width="match_parent"
-                            android:layout_height="52dp"
+                            android:layout_height="wrap_content"
                             android:layout_marginTop="24dp"
-                            android:text="Update Employee"
-                            android:textSize="16sp"
-                            android:textStyle="bold" />
+                            android:text="Update Employee" />
 
                     </LinearLayout>
 
@@ -319,7 +355,7 @@
             android:id="@+id/layoutSavingLoading"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="#80FFFFFF"
+            android:background="#80F5F6F0"
             android:clickable="true"
             android:focusable="true"
             android:visibility="gone"
@@ -328,7 +364,8 @@
             <ProgressBar
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center" />
+                android:layout_gravity="center"
+                android:indeterminateTint="@color/primary" />
 
         </FrameLayout>
 

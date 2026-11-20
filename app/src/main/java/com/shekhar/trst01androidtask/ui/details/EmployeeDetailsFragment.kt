@@ -4,7 +4,11 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.content.ContextCompat
 import androidx.core.os.bundleOf
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.updatePadding
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
@@ -43,9 +47,21 @@ class EmployeeDetailsFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        setupInsets(view)
         setupListeners()
         setupRecyclerView()
         observeViewModel()
+    }
+
+    private fun setupInsets(view: View) {
+        ViewCompat.setOnApplyWindowInsetsListener(view) { _, insets ->
+            val statusBarInset = insets.getInsets(WindowInsetsCompat.Type.statusBars())
+            val navBarInset = insets.getInsets(WindowInsetsCompat.Type.navigationBars())
+
+            binding.headerBar.updatePadding(top = statusBarInset.top)
+            binding.scrollViewContent.updatePadding(bottom = navBarInset.bottom)
+            insets
+        }
     }
 
     private fun setupListeners() {
@@ -147,6 +163,7 @@ class EmployeeDetailsFragment : Fragment() {
     }
 
     private fun bindEmployeeInfo(employee: EmployeeEntity) {
+        val context = requireContext()
         val name = employee.employeeName ?: "Unknown"
         binding.tvEmployeeName.text = name
 
@@ -161,9 +178,13 @@ class EmployeeDetailsFragment : Fragment() {
 
         val isActive = employee.isActive == true
         binding.chipStatus.text = if (isActive) "Active" else "Inactive"
-        binding.chipStatus.setBackgroundResource(
-            if (isActive) R.drawable.bg_status_chip else R.drawable.bg_status_chip_inactive
-        )
+        if (isActive) {
+            binding.chipStatus.setBackgroundResource(R.drawable.bg_status_chip)
+            binding.chipStatus.setTextColor(ContextCompat.getColor(context, R.color.primary_dark))
+        } else {
+            binding.chipStatus.setBackgroundResource(R.drawable.bg_status_chip_inactive)
+            binding.chipStatus.setTextColor(ContextCompat.getColor(context, R.color.text_secondary))
+        }
 
         binding.tvDepartmentId.text = employee.departmentId?.toString() ?: "N/A"
         binding.tvBranchId.text = employee.branchId?.toString() ?: "N/A"

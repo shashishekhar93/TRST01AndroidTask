@@ -3,11 +3,17 @@ package com.shekhar.trst01androidtask.ui.list
 import android.graphics.Color
 import android.graphics.drawable.GradientDrawable
 import android.os.Bundle
+import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.core.content.ContextCompat
+import androidx.core.content.res.ResourcesCompat
 import androidx.core.os.bundleOf
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.updatePadding
 import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
@@ -78,11 +84,23 @@ class EmployeeListFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        setupInsets()
         setupRecyclerView()
         setupSwipeRefresh()
         setupSearch()
         setupListeners()
         observeViewModel()
+    }
+
+    private fun setupInsets() {
+        ViewCompat.setOnApplyWindowInsetsListener(binding.root) { _, insets ->
+            val statusBarInset = insets.getInsets(WindowInsetsCompat.Type.statusBars())
+            val navBarInset = insets.getInsets(WindowInsetsCompat.Type.navigationBars())
+
+            binding.tvHeaderTitle.updatePadding(top = statusBarInset.top + dpToPx(16))
+            binding.swipeRefreshLayout.updatePadding(bottom = navBarInset.bottom)
+            insets
+        }
     }
 
     private fun setupRecyclerView() {
@@ -143,7 +161,6 @@ class EmployeeListFragment : Fragment() {
                             .distinct()
                             .sorted()
 
-                        // If the selected branch no longer exists, select All.
                         if (
                             selectedBranchId != null &&
                             selectedBranchId !in availableBranchIds
@@ -192,13 +209,11 @@ class EmployeeListFragment : Fragment() {
     private fun renderBranchTabs() {
         binding.layoutBranchTabs.removeAllViews()
 
-        // First tab: All employees.
         addBranchTab(
             title = "All",
             branchId = null
         )
 
-        // Remaining tabs: Actual branch IDs from the database.
         availableBranchIds.forEach { branchId ->
             addBranchTab(
                 title = "Branch $branchId",
@@ -212,39 +227,37 @@ class EmployeeListFragment : Fragment() {
         branchId: Int?
     ) {
         val isSelected = selectedBranchId == branchId
+        val context = requireContext()
 
-        val tab = TextView(requireContext()).apply {
+        val primaryColor = ContextCompat.getColor(context, R.color.primary)
+        val surfaceColor = ContextCompat.getColor(context, R.color.surface)
+        val dividerColor = ContextCompat.getColor(context, R.color.divider)
+        val textSecondaryColor = ContextCompat.getColor(context, R.color.text_secondary)
+
+        val outfitTypeface = ResourcesCompat.getFont(context, R.font.outfit)
+
+        val tab = TextView(context).apply {
             text = title
             textSize = 14f
-            setTextColor(
-                if (isSelected) Color.WHITE else Color.rgb(55, 65, 81)
-            )
+            typeface = outfitTypeface
+            setTextColor(if (isSelected) Color.WHITE else textSecondaryColor)
 
-            gravity = android.view.Gravity.CENTER
+            gravity = Gravity.CENTER
 
             setPadding(
                 dpToPx(18),
-                dpToPx(10),
+                dpToPx(9),
                 dpToPx(18),
-                dpToPx(10)
+                dpToPx(9)
             )
 
             background = GradientDrawable().apply {
-                cornerRadius = dpToPx(24).toFloat()
+                cornerRadius = dpToPx(20).toFloat()
 
-                setColor(
-                    if (isSelected) {
-                        Color.rgb(37, 99, 235)
-                    } else {
-                        Color.rgb(243, 244, 246)
-                    }
-                )
+                setColor(if (isSelected) primaryColor else surfaceColor)
 
                 if (!isSelected) {
-                    setStroke(
-                        dpToPx(1),
-                        Color.rgb(209, 213, 219)
-                    )
+                    setStroke(dpToPx(1), dividerColor)
                 }
             }
 
@@ -264,9 +277,7 @@ class EmployeeListFragment : Fragment() {
         tab.setOnClickListener {
             if (selectedBranchId != branchId) {
                 selectedBranchId = branchId
-
                 renderBranchTabs()
-
                 submitFilteredEmployees(viewModel.employees.value)
             }
         }
@@ -284,7 +295,6 @@ class EmployeeListFragment : Fragment() {
         }
 
         employeeAdapter.submitList(displayedEmployees)
-
         updateFilteredContentVisibility()
     }
 

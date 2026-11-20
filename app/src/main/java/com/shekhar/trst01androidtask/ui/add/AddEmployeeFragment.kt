@@ -5,6 +5,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.updatePadding
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
@@ -36,8 +39,20 @@ class AddEmployeeFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        setupInsets(view)
         setupListeners()
         observeViewModel()
+    }
+
+    private fun setupInsets(view: View) {
+        ViewCompat.setOnApplyWindowInsetsListener(view) { _, insets ->
+            val statusBarInset = insets.getInsets(WindowInsetsCompat.Type.statusBars())
+            val navBarAndImeInset = insets.getInsets(WindowInsetsCompat.Type.navigationBars() or WindowInsetsCompat.Type.ime())
+
+            binding.headerBar.updatePadding(top = statusBarInset.top)
+            binding.scrollViewForm.updatePadding(bottom = navBarAndImeInset.bottom + dpToPx(16))
+            insets
+        }
     }
 
     private fun setupListeners() {
@@ -130,6 +145,10 @@ class AddEmployeeFragment : Fragment() {
                 binding.tvGeneralError.text = state.message
             }
         }
+    }
+
+    private fun dpToPx(value: Int): Int {
+        return (value * resources.displayMetrics.density).toInt()
     }
 
     override fun onDestroyView() {

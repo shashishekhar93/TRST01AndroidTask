@@ -1,8 +1,8 @@
 package com.shekhar.trst01androidtask.ui
 
-import android.graphics.Paint
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
@@ -39,6 +39,7 @@ class EmployeeAdapter(
     ) : RecyclerView.ViewHolder(binding.root) {
 
         fun bind(employee: EmployeeEntity) {
+            val context = binding.root.context
             val name = employee.employeeName ?: "Unknown"
 
             binding.tvEmployeeName.text = name
@@ -61,15 +62,14 @@ class EmployeeAdapter(
 
             binding.chipStatus.text = if (isActive) "Active" else "Inactive"
 
-            binding.chipStatus.setBackgroundResource(
-                if (isActive) {
-                    R.drawable.bg_status_chip
-                } else {
-                    R.drawable.bg_status_chip_inactive
-                }
-            )
+            if (isActive) {
+                binding.chipStatus.setBackgroundResource(R.drawable.bg_status_chip)
+                binding.chipStatus.setTextColor(ContextCompat.getColor(context, R.color.primary_dark))
+            } else {
+                binding.chipStatus.setBackgroundResource(R.drawable.bg_status_chip_inactive)
+                binding.chipStatus.setTextColor(ContextCompat.getColor(context, R.color.text_secondary))
+            }
 
-            binding.btnViewDetails.setPaintFlags(binding.btnViewDetails.getPaintFlags() or Paint.UNDERLINE_TEXT_FLAG)
             binding.btnViewDetails.setOnClickListener {
                 onViewDetailsClick(employee)
             }

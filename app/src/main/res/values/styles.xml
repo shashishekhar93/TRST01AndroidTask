@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Text Appearances using Outfit font family -->
+    <style name="TextAppearance.TRST.Title" parent="TextAppearance.AppCompat.Title">
+        <item name="fontFamily">@font/outfit</item>
+        <item name="android:fontFamily">@font/outfit</item>
+        <item name="android:textSize">20sp</item>
+        <item name="android:textColor">@color/text_primary</item>
+        <item name="android:textStyle">normal</item>
+    </style>
+
+    <style name="TextAppearance.TRST.ProminentHeader" parent="TextAppearance.AppCompat.Large">
+        <item name="fontFamily">@font/outfit</item>
+        <item name="android:fontFamily">@font/outfit</item>
+        <item name="android:textSize">22sp</item>
+        <item name="android:textColor">@color/text_primary</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="TextAppearance.TRST.SectionHeader" parent="TextAppearance.AppCompat.Medium">
+        <item name="fontFamily">@font/outfit</item>
+        <item name="android:fontFamily">@font/outfit</item>
+        <item name="android:textSize">16sp</item>
+        <item name="android:textColor">@color/text_primary</item>
+    </style>
+
+    <style name="TextAppearance.TRST.ItemName" parent="TextAppearance.AppCompat.Medium">
+        <item name="fontFamily">@font/outfit</item>
+        <item name="android:fontFamily">@font/outfit</item>
+        <item name="android:textSize">16sp</item>
+        <item name="android:textColor">@color/text_primary</item>
+    </style>
+
+    <style name="TextAppearance.TRST.ImportantValue" parent="TextAppearance.AppCompat.Body1">
+        <item name="fontFamily">@font/outfit</item>
+        <item name="android:fontFamily">@font/outfit</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:textColor">@color/text_primary</item>
+    </style>
+
+    <style name="TextAppearance.TRST.Body" parent="TextAppearance.AppCompat.Body1">
+        <item name="fontFamily">@font/outfit</item>
+        <item name="android:fontFamily">@font/outfit</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:textColor">@color/text_primary</item>
+    </style>
+
+    <style name="TextAppearance.TRST.Supporting" parent="TextAppearance.AppCompat.Caption">
+        <item name="fontFamily">@font/outfit</item>
+        <item name="android:fontFamily">@font/outfit</item>
+        <item name="android:textSize">12sp</item>
+        <item name="android:textColor">@color/text_secondary</item>
+    </style>
+
+    <style name="TextAppearance.TRST.Button" parent="TextAppearance.AppCompat.Button">
+        <item name="fontFamily">@font/outfit</item>
+        <item name="android:fontFamily">@font/outfit</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:textColor">@color/surface</item>
+    </style>
+
+    <!-- Component Styles -->
+    <style name="Widget.TRST.Button.Primary" parent="Widget.AppCompat.Button">
+        <item name="android:background">@drawable/bg_button_primary</item>
+        <item name="android:textColor">@color/surface</item>
+        <item name="android:textSize">14sp</item>
+        <item name="fontFamily">@font/outfit</item>
+        <item name="android:fontFamily">@font/outfit</item>
+        <item name="android:minHeight">@dimen/button_height</item>
+        <item name="android:stateListAnimator">@null</item>
+    </style>
+
+    <style name="Widget.TRST.Button.Secondary" parent="Widget.AppCompat.Button">
+        <item name="android:background">@drawable/bg_button_secondary</item>
+        <item name="android:textColor">@color/primary_dark</item>
+        <item name="android:textSize">14sp</item>
+        <item name="fontFamily">@font/outfit</item>
+        <item name="android:fontFamily">@font/outfit</item>
+        <item name="android:minHeight">@dimen/button_height</item>
+        <item name="android:stateListAnimator">@null</item>
+    </style>
+
+    <style name="Widget.TRST.Button.Destructive" parent="Widget.AppCompat.Button">
+        <item name="android:background">@drawable/bg_button_destructive</item>
+        <item name="android:textColor">@color/surface</item>
+        <item name="android:textSize">14sp</item>
+        <item name="fontFamily">@font/outfit</item>
+        <item name="android:fontFamily">@font/outfit</item>
+        <item name="android:minHeight">@dimen/button_height</item>
+        <item name="android:stateListAnimator">@null</item>
+    </style>
+
+    <style name="Widget.TRST.Button.Outlined" parent="Widget.AppCompat.Button">
+        <item name="android:background">@drawable/bg_button_outlined</item>
+        <item name="android:textColor">@color/primary</item>
+        <item name="android:textSize">14sp</item>
+        <item name="fontFamily">@font/outfit</item>
+        <item name="android:fontFamily">@font/outfit</item>
+        <item name="android:minHeight">@dimen/button_height</item>
+        <item name="android:stateListAnimator">@null</item>
+    </style>
+
+    <style name="Widget.TRST.Button.OutlinedDestructive" parent="Widget.AppCompat.Button">
+        <item name="android:background">@drawable/bg_button_outlined_destructive</item>
+        <item name="android:textColor">@color/error</item>
+        <item name="android:textSize">14sp</item>
+        <item name="fontFamily">@font/outfit</item>
+        <item name="android:fontFamily">@font/outfit</item>
+        <item name="android:minHeight">@dimen/button_height</item>
+        <item name="android:stateListAnimator">@null</item>
+    </style>
+</resources>

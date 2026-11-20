@@ -5,6 +5,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.updatePadding
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
@@ -41,6 +44,7 @@ class EditEmployeeFragment : Fragment() {
             hasPrepopulated = savedInstanceState.getBoolean(KEY_HAS_PREPOPULATED, false)
         }
 
+        setupInsets(view)
         setupListeners()
         observeViewModel()
     }
@@ -48,6 +52,17 @@ class EditEmployeeFragment : Fragment() {
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
         outState.putBoolean(KEY_HAS_PREPOPULATED, hasPrepopulated)
+    }
+
+    private fun setupInsets(view: View) {
+        ViewCompat.setOnApplyWindowInsetsListener(view) { _, insets ->
+            val statusBarInset = insets.getInsets(WindowInsetsCompat.Type.statusBars())
+            val navBarAndImeInset = insets.getInsets(WindowInsetsCompat.Type.navigationBars() or WindowInsetsCompat.Type.ime())
+
+            binding.headerBar.updatePadding(top = statusBarInset.top)
+            binding.scrollViewForm.updatePadding(bottom = navBarAndImeInset.bottom + dpToPx(16))
+            insets
+        }
     }
 
     private fun setupListeners() {
@@ -177,6 +192,10 @@ class EditEmployeeFragment : Fragment() {
                 }
             }
         }
+    }
+
+    private fun dpToPx(value: Int): Int {
+        return (value * resources.displayMetrics.density).toInt()
     }
 
     override fun onDestroyView() {
