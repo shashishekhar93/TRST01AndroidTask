@@ -5,6 +5,7 @@ import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
+import androidx.room.Update
 import com.shekhar.trst01androidtask.data.local.entity.EmployeeEntity
 import kotlinx.coroutines.flow.Flow
 
@@ -29,8 +30,8 @@ interface EmployeeDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertEmployees(employees: List<EmployeeEntity>)
 
-    //update employee
-
+    @Update
+    suspend fun updateEmployee(employee: EmployeeEntity)
 
     @Delete
     suspend fun deleteEmployee(employee: EmployeeEntity)

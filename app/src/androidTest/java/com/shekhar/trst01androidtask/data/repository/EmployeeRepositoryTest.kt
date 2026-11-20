@@ -287,4 +287,161 @@ class EmployeeRepositoryTest {
         assertTrue(repository.getDocumentsForEmployee(empId).isEmpty())
         Assert.assertNull(repository.getMapAreaForEmployee(empId))
     }
+
+    @Test
+    fun employeeEdit_preservesDocuments() = runTest {
+        val empId = 701
+        val employee = EmployeeEntity(
+            employeeId = empId,
+            employeeName = "Original Name",
+            departmentId = 1,
+            managerId = null,
+            isActive = true,
+            branchId = 1,
+            createdDate = "2023-01-01",
+            updatedDate = null
+        )
+        repository.insertEmployee(employee)
+
+        val doc1 = DocumentEntity(1, empId, "Doc1", "ID", true, "2023-01-01", null, "url1", null)
+        val doc2 = DocumentEntity(2, empId, "Doc2", "ID", true, "2023-01-01", null, "url2", null)
+        repository.saveDocument(doc1)
+        repository.saveDocument(doc2)
+
+        val updatedEmployee = employee.copy(employeeName = "Updated Name", updatedDate = "2023-01-02")
+        val result = repository.updateEmployee(updatedEmployee)
+        assertTrue(result is Result.Success)
+
+        val retrieved = repository.getEmployeeById(empId)
+        assertEquals("Updated Name", retrieved?.employeeName)
+
+        val docs = repository.getDocumentsForEmployee(empId)
+        assertEquals(2, docs.size)
+        assertTrue(docs.any { it.documentId == 1 })
+        assertTrue(docs.any { it.documentId == 2 })
+    }
+
+    @Test
+    fun employeeEdit_preservesMapArea() = runTest {
+        val empId = 702
+        val employee = EmployeeEntity(
+            employeeId = empId,
+            employeeName = "Original Name",
+            departmentId = 1,
+            managerId = null,
+            isActive = true,
+            branchId = 1,
+            createdDate = "2023-01-01",
+            updatedDate = null
+        )
+        repository.insertEmployee(employee)
+
+        val coordinates = listOf(
+            LatLngPoint(10.0, 20.0),
+            LatLngPoint(11.0, 21.0),
+            LatLngPoint(12.0, 22.0)
+        )
+        repository.saveMapArea(empId, coordinates)
+
+        val updatedEmployee = employee.copy(employeeName = "Updated Name", updatedDate = "2023-01-02")
+        val result = repository.updateEmployee(updatedEmployee)
+        assertTrue(result is Result.Success)
+
+        val mapArea = repository.getMapAreaForEmployee(empId)
+        assertNotNull(mapArea)
+        assertEquals(3, mapArea?.coordinates?.size)
+        assertEquals(10.0, mapArea?.coordinates?.get(0)?.latitude ?: 0.0, 0.0001)
+        assertEquals(22.0, mapArea?.coordinates?.get(2)?.longitude ?: 0.0, 0.0001)
+    }
+
+    @Test
+    fun employeeEdit_preservesBothRelationships() = runTest {
+        val empId = 703
+        val employee = EmployeeEntity(
+            employeeId = empId,
+            employeeName = "Original Name",
+            departmentId = 1,
+            managerId = null,
+            isActive = true,
+            branchId = 1,
+            createdDate = "2023-01-01",
+            updatedDate = null
+        )
+        repository.insertEmployee(employee)
+
+        val doc = DocumentEntity(10, empId, "Passport", "ID", true, "2023-01-01", null, "url1", null)
+        repository.saveDocument(doc)
+
+        val coordinates = listOf(
+            LatLngPoint(1.0, 1.0),
+            LatLngPoint(2.0, 2.0),
+            LatLngPoint(3.0, 3.0)
+        )
+        repository.saveMapArea(empId, coordinates)
+
+        val updatedEmployee = employee.copy(employeeName = "Updated Name", updatedDate = "2023-01-02")
+        val result = repository.updateEmployee(updatedEmployee)
+        assertTrue(result is Result.Success)
+
+        val docs = repository.getDocumentsForEmployee(empId)
+        assertEquals(1, docs.size)
+        assertEquals("Passport", docs[0].documentName)
+
+        val mapArea = repository.getMapAreaForEmployee(empId)
+        assertNotNull(mapArea)
+        assertEquals(3, mapArea?.coordinates?.size)
+    }
+
+    @Test
+    fun employeeDeletion_stillCascades() = runTest {
+        val empId = 704
+        val employee = EmployeeEntity(
+            employeeId = empId,
+            employeeName = "To Delete",
+            departmentId = 1,
+            managerId = null,
+            isActive = true,
+            branchId = 1,
+            createdDate = "2023-01-01",
+            updatedDate = null
+        )
+        repository.insertEmployee(employee)
+
+        val doc = DocumentEntity(20, empId, "Doc", "ID", true, "2023-01-01", null, "url1", null)
+        repository.saveDocument(doc)
+
+        val coordinates = listOf(
+            LatLngPoint(5.0, 5.0),
+            LatLngPoint(6.0, 6.0),
+            LatLngPoint(7.0, 7.0)
+        )
+        repository.saveMapArea(empId, coordinates)
+
+        val result = repository.deleteEmployee(employee)
+        assertTrue(result is Result.Success)
+
+        Assert.assertNull(repository.getEmployeeById(empId))
+        assertTrue(repository.getDocumentsForEmployee(empId).isEmpty())
+        Assert.assertNull(repository.getMapAreaForEmployee(empId))
+    }
+
+    @Test
+    fun addEmployee_remainsFunctional() = runTest {
+        val employee = EmployeeEntity(
+            employeeId = 705,
+            employeeName = "New Employee",
+            departmentId = 1,
+            managerId = null,
+            isActive = true,
+            branchId = 1,
+            createdDate = "2023-01-01",
+            updatedDate = null
+        )
+        val result = repository.insertEmployee(employee)
+        assertTrue(result is Result.Success)
+
+        val retrieved = repository.getEmployeeById(705)
+        assertNotNull(retrieved)
+        assertEquals("New Employee", retrieved?.employeeName)
+    }
 }

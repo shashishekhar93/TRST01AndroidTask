@@ -171,7 +171,7 @@ class EmployeeViewModel @Inject constructor(
     fun updateEmployee(employee: EmployeeEntity) {
         viewModelScope.launch {
             try {
-                repository.insertEmployee(employee)
+                repository.updateEmployee(employee)
             } catch (e: Exception) {
                 _error.value = e.message ?: "Failed to update employee"
             }

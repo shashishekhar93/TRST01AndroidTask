@@ -52,7 +52,16 @@ class EmployeeRepositoryImpl @Inject constructor(
 
             database.withTransaction {
                 for (mapped in mappedRecords) {
-                    employeeDao.insertEmployee(mapped.employee)
+                    val existing = employeeDao.getEmployeeById(mapped.employee.employeeId)
+                    if (existing != null) {
+                        val updatedEmp = mapped.employee.copy(
+                            createdDate = existing.createdDate ?: mapped.employee.createdDate
+                        )
+                        employeeDao.updateEmployee(updatedEmp)
+                    } else {
+                        employeeDao.insertEmployee(mapped.employee)
+                    }
+
                     val existingDocs = documentDao.getDocumentsForEmployeeSync(mapped.employee.employeeId)
                     val newDocIds = mapped.documents.map { it.documentId }.toSet()
                     for (oldDoc in existingDocs) {
@@ -90,6 +99,15 @@ class EmployeeRepositoryImpl @Inject constructor(
     override suspend fun insertEmployee(employee: EmployeeEntity): Result<Unit> {
         return try {
             employeeDao.insertEmployee(employee)
+            Result.Success(Unit)
+        } catch (e: Exception) {
+            Result.Error(e)
+        }
+    }
+
+    override suspend fun updateEmployee(employee: EmployeeEntity): Result<Unit> {
+        return try {
+            employeeDao.updateEmployee(employee)
             Result.Success(Unit)
         } catch (e: Exception) {
             Result.Error(e)

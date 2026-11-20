@@ -134,10 +134,9 @@ class EditEmployeeViewModel @Inject constructor(
                     managerId = managerId,
                     isActive = isActive,
                     updatedDate = nowIso
-                    // createdDate is preserved
                 )
 
-                val result = repository.insertEmployee(updatedEmployee)
+                val result = repository.updateEmployee(updatedEmployee)
                 when (result) {
                     is Result.Success -> {
                         _isSaving.value = false

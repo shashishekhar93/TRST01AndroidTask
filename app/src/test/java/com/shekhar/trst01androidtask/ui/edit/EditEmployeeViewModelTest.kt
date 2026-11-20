@@ -46,7 +46,7 @@ class EditEmployeeViewModelTest {
     fun setUp() {
         Dispatchers.setMain(testDispatcher)
         every { repository.observeEmployeeById(101) } returns employeeFlow
-        coEvery { repository.insertEmployee(any()) } returns Result.Success(Unit)
+        coEvery { repository.updateEmployee(any()) } returns Result.Success(Unit)
     }
 
     @After
@@ -93,7 +93,7 @@ class EditEmployeeViewModelTest {
         testScheduler.advanceUntilIdle()
 
         val captured = mutableListOf<EmployeeEntity>()
-        coVerify { repository.insertEmployee(capture(captured)) }
+        coVerify { repository.updateEmployee(capture(captured)) }
 
         assertEquals(1, captured.size)
         val updated = captured[0]
@@ -129,13 +129,13 @@ class EditEmployeeViewModelTest {
         assertEquals("Department ID must be a positive number", validation.departmentError)
         assertEquals("Branch ID is required", validation.branchError)
 
-        coVerify(exactly = 0) { repository.insertEmployee(any()) }
+        coVerify(exactly = 0) { repository.updateEmployee(any()) }
     }
 
     @Test
     fun updateEmployee_repositoryError_emitsErrorState() = runTest {
         employeeFlow.value = existingEmployee
-        coEvery { repository.insertEmployee(any()) } returns Result.Error(IOException("Update error"))
+        coEvery { repository.updateEmployee(any()) } returns Result.Error(IOException("Update error"))
         val savedStateHandle = SavedStateHandle(mapOf("employeeId" to 101))
         val viewModel = EditEmployeeViewModel(savedStateHandle, repository)
         testScheduler.advanceUntilIdle()
