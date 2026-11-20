@@ -82,7 +82,7 @@
 
     <style name="Widget.TRST.Button.Destructive" parent="Widget.AppCompat.Button">
         <item name="android:background">@drawable/bg_button_destructive</item>
-        <item name="android:textColor">@color/surface</item>
+        <item name="android:textColor">@color/error</item>
         <item name="android:textSize">14sp</item>
         <item name="fontFamily">@font/outfit</item>
         <item name="android:fontFamily">@font/outfit</item>

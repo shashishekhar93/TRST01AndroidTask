@@ -126,8 +126,19 @@ class EmployeeListFragment : Fragment() {
     }
 
     private fun setupSearch() {
+        val initialQuery = binding.etSearch.text?.toString().orEmpty()
+        binding.tvClearSearch.visibility = if (initialQuery.isBlank()) View.GONE else View.VISIBLE
+
         binding.etSearch.doAfterTextChanged { text ->
-            viewModel.setSearchQuery(text?.toString().orEmpty())
+            val query = text?.toString().orEmpty()
+            viewModel.setSearchQuery(query)
+            binding.tvClearSearch.visibility = if (query.isBlank()) View.GONE else View.VISIBLE
+        }
+
+        binding.tvClearSearch.setOnClickListener {
+            binding.etSearch.setText("")
+            viewModel.setSearchQuery("")
+            binding.tvClearSearch.visibility = View.GONE
         }
     }
 
