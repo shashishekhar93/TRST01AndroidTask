@@ -1,5 +1,6 @@
 package com.shekhar.trst01androidtask.ui.preview
 
+import android.content.Context
 import androidx.lifecycle.SavedStateHandle
 import com.shekhar.trst01androidtask.data.local.entity.DocumentEntity
 import com.shekhar.trst01androidtask.data.repository.EmployeeRepository
@@ -13,6 +14,7 @@ import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.test.setMain
+import okhttp3.OkHttpClient
 import org.junit.After
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
@@ -23,6 +25,8 @@ import org.junit.Test
 class DocumentPreviewViewModelTest {
 
     private val repository: EmployeeRepository = mockk(relaxed = true)
+    private val context: Context = mockk(relaxed = true)
+    private val okHttpClient: OkHttpClient = mockk(relaxed = true)
     private val testDispatcher = StandardTestDispatcher()
 
     private val documentsFlow = MutableStateFlow<List<DocumentEntity>>(emptyList())
@@ -40,7 +44,7 @@ class DocumentPreviewViewModelTest {
     @Test
     fun missingArgumentsReturnsNotFoundState() = runTest {
         val savedStateHandle = SavedStateHandle()
-        val viewModel = DocumentPreviewViewModel(savedStateHandle, repository)
+        val viewModel = DocumentPreviewViewModel(savedStateHandle, repository, context, okHttpClient)
         testScheduler.advanceUntilIdle()
 
         assertEquals(DocumentPreviewUiState.NotFound, viewModel.uiState.value)
@@ -55,7 +59,7 @@ class DocumentPreviewViewModelTest {
         val savedStateHandle = SavedStateHandle(mapOf("employeeId" to 101, "documentId" to 2))
         every { repository.observeDocumentsForEmployee(101) } returns documentsFlow
 
-        val viewModel = DocumentPreviewViewModel(savedStateHandle, repository)
+        val viewModel = DocumentPreviewViewModel(savedStateHandle, repository, context, okHttpClient)
         testScheduler.advanceUntilIdle()
 
         val state = viewModel.uiState.value
@@ -72,7 +76,7 @@ class DocumentPreviewViewModelTest {
         val savedStateHandle = SavedStateHandle(mapOf("employeeId" to 101, "documentId" to 999))
         every { repository.observeDocumentsForEmployee(101) } returns documentsFlow
 
-        val viewModel = DocumentPreviewViewModel(savedStateHandle, repository)
+        val viewModel = DocumentPreviewViewModel(savedStateHandle, repository, context, okHttpClient)
         testScheduler.advanceUntilIdle()
 
         assertEquals(DocumentPreviewUiState.NotFound, viewModel.uiState.value)
@@ -85,7 +89,7 @@ class DocumentPreviewViewModelTest {
             throw RuntimeException("Database error")
         }
 
-        val viewModel = DocumentPreviewViewModel(savedStateHandle, repository)
+        val viewModel = DocumentPreviewViewModel(savedStateHandle, repository, context, okHttpClient)
         testScheduler.advanceUntilIdle()
 
         val state = viewModel.uiState.value

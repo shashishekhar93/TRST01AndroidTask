@@ -1,7 +1,9 @@
 package com.shekhar.trst01androidtask.ui.details
 
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
@@ -11,6 +13,7 @@ import com.shekhar.trst01androidtask.R
 import com.shekhar.trst01androidtask.data.local.entity.DocumentEntity
 import com.shekhar.trst01androidtask.databinding.ItemDocumentBinding
 import com.shekhar.trst01androidtask.util.DateFormatter
+import com.shekhar.trst01androidtask.util.DocumentUtils
 
 class DocumentAdapter(
     private val onDocumentClick: (DocumentEntity) -> Unit
@@ -47,23 +50,28 @@ class DocumentAdapter(
                 binding.chipVerification.setTextColor(ContextCompat.getColor(context, R.color.text_secondary))
             }
 
-            val imageUrl = document.thumbnailUrl.takeIf { !it.isNullResourceOrBlank() }
-                ?: document.documentUrl.takeIf { !it.isNullResourceOrBlank() }
+            val isPdf = DocumentUtils.isPdfDocument(document.documentType, document.documentUrl, document.thumbnailUrl)
 
-            Glide.with(binding.ivThumbnail.context)
-                .load(imageUrl)
-                .placeholder(R.drawable.bg_shimmer_placeholder)
-                .error(R.drawable.bg_shimmer_placeholder)
-                .centerCrop()
-                .into(binding.ivThumbnail)
+            if (isPdf) {
+                Glide.with(context).clear(binding.ivThumbnail as View)
+                binding.ivThumbnail.setImageResource(R.drawable.ic_document_pdf)
+                binding.ivThumbnail.scaleType = ImageView.ScaleType.CENTER_INSIDE
+                binding.ivThumbnail.setBackgroundResource(R.drawable.bg_shimmer_placeholder)
+            } else {
+                val imageUrl = DocumentUtils.getPreviewUrl(document)
+                binding.ivThumbnail.scaleType = ImageView.ScaleType.CENTER_CROP
+                binding.ivThumbnail.setBackgroundResource(R.drawable.bg_shimmer_placeholder)
+                Glide.with(binding.ivThumbnail.context)
+                    .load(imageUrl)
+                    .placeholder(R.drawable.bg_shimmer_placeholder)
+                    .error(R.drawable.bg_shimmer_placeholder)
+                    .centerCrop()
+                    .into(binding.ivThumbnail)
+            }
 
             binding.root.setOnClickListener {
                 onDocumentClick(document)
             }
-        }
-
-        private fun String?.isNullResourceOrBlank(): Boolean {
-            return this.isNullOrBlank() || this.equals("null", ignoreCase = true)
         }
     }
 

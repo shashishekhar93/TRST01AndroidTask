@@ -12,7 +12,8 @@
     <LinearLayout
         android:id="@+id/headerBar"
         android:layout_width="match_parent"
-        android:layout_height="56dp"
+        android:layout_height="wrap_content"
+        android:minHeight="56dp"
         android:gravity="center_vertical"
         android:orientation="horizontal"
         android:paddingHorizontal="8dp">
@@ -173,7 +174,7 @@
 
             </androidx.cardview.widget.CardView>
 
-            <!-- Image View Container -->
+            <!-- Preview Container (Image or PDF) -->
             <FrameLayout
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
@@ -196,6 +197,24 @@
                     android:contentDescription="Document Preview"
                     android:padding="8dp"
                     android:scaleType="fitCenter" />
+
+                <!-- PDF Scrollable Container -->
+                <ScrollView
+                    android:id="@+id/scrollPdfContainer"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:fillViewport="true"
+                    android:visibility="gone">
+
+                    <LinearLayout
+                        android:id="@+id/layoutPdfPages"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:padding="8dp"
+                        android:gravity="center_horizontal" />
+
+                </ScrollView>
 
                 <!-- Unsupported / Error message layout inside frame -->
                 <LinearLayout

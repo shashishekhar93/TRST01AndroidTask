@@ -6,6 +6,8 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
+import android.widget.LinearLayout
 import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
@@ -25,6 +27,7 @@ import com.shekhar.trst01androidtask.R
 import com.shekhar.trst01androidtask.data.local.entity.DocumentEntity
 import com.shekhar.trst01androidtask.databinding.FragmentDocumentPreviewBinding
 import com.shekhar.trst01androidtask.util.DateFormatter
+import com.shekhar.trst01androidtask.util.DocumentUtils
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
@@ -81,6 +84,14 @@ class DocumentPreviewFragment : Fragment() {
                 }
             }
         }
+
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.pdfState.collectLatest { state ->
+                    updatePdfState(state)
+                }
+            }
+        }
     }
 
     private fun updateUiState(state: DocumentPreviewUiState) {
@@ -115,6 +126,45 @@ class DocumentPreviewFragment : Fragment() {
         }
     }
 
+    private fun updatePdfState(state: PdfState) {
+        when (state) {
+            is PdfState.Idle -> {
+                // do nothing
+            }
+            is PdfState.Loading -> {
+                startShimmerAnimation()
+                binding.scrollPdfContainer.visibility = View.GONE
+                binding.layoutImageError.visibility = View.GONE
+            }
+            is PdfState.Success -> {
+                stopShimmerAnimation()
+                binding.layoutImageError.visibility = View.GONE
+                binding.scrollPdfContainer.visibility = View.VISIBLE
+
+                binding.layoutPdfPages.removeAllViews()
+                for (bitmap in state.bitmaps) {
+                    val imageView = ImageView(requireContext()).apply {
+                        layoutParams = LinearLayout.LayoutParams(
+                            LinearLayout.LayoutParams.MATCH_PARENT,
+                            LinearLayout.LayoutParams.WRAP_CONTENT
+                        ).apply {
+                            bottomMargin = 16
+                        }
+                        setImageBitmap(bitmap)
+                        adjustViewBounds = true
+                        scaleType = ImageView.ScaleType.FIT_CENTER
+                    }
+                    binding.layoutPdfPages.addView(imageView)
+                }
+            }
+            is PdfState.Error -> {
+                stopShimmerAnimation()
+                binding.scrollPdfContainer.visibility = View.GONE
+                showImageError(state.message)
+            }
+        }
+    }
+
     private fun bindDocument(document: DocumentEntity) {
         val context = requireContext()
         val title = document.documentName ?: "Document Preview"
@@ -135,73 +185,82 @@ class DocumentPreviewFragment : Fragment() {
             binding.chipStatus.setTextColor(ContextCompat.getColor(context, R.color.text_secondary))
         }
 
-        val (imageUrl, isPdf) = evaluateDocumentUrl(document)
+        val isPdf = DocumentUtils.isPdfDocument(document.documentType, document.documentUrl, document.thumbnailUrl)
 
-        when {
-            isPdf -> {
+        if (isPdf) {
+            binding.ivDocumentImage.visibility = View.GONE
+            binding.scrollPdfContainer.visibility = View.VISIBLE
+            binding.layoutImageError.visibility = View.GONE
+
+            val pdfUrl = DocumentUtils.getPdfUrl(document)
+            if (pdfUrl.isNullOrBlank()) {
                 stopShimmerAnimation()
-                showImageError("PDF document preview is not supported in this version.")
+                showImageError("No PDF document URL available for preview.")
+            } else {
+                viewModel.loadPdf(pdfUrl)
             }
-            imageUrl.isNullOrBlank() -> {
+        } else {
+            binding.scrollPdfContainer.visibility = View.GONE
+            val imageUrl = DocumentUtils.getPreviewUrl(document)
+            if (imageUrl.isNullOrBlank()) {
                 stopShimmerAnimation()
                 showImageError("No document URL available for preview.")
-            }
-            else -> {
+            } else {
                 loadImage(imageUrl)
             }
         }
     }
 
-    private fun evaluateDocumentUrl(document: DocumentEntity): Pair<String?, Boolean> {
-        val docUrl = document.documentUrl?.takeIf { it.isNotBlank() && !it.equals("null", ignoreCase = true) }
-        val thumbUrl = document.thumbnailUrl?.takeIf { it.isNotBlank() && !it.equals("null", ignoreCase = true) }
-
-        fun isPdfUrl(url: String?): Boolean {
-            if (url == null) return false
-            val cleanUrl = url.substringBefore('?').substringBefore('#')
-            return cleanUrl.endsWith(".pdf", ignoreCase = true)
-        }
-
-        if (document.documentType?.equals("PDF", ignoreCase = true) == true) {
-            return Pair(null, true)
-        }
-        if (docUrl != null && isPdfUrl(docUrl)) {
-            return Pair(null, true)
-        }
-        if (thumbUrl != null && isPdfUrl(thumbUrl)) {
-            return Pair(null, true)
-        }
-
-        val targetUrl = docUrl ?: thumbUrl
-        return Pair(targetUrl, false)
-    }
-
     private fun loadImage(url: String) {
-        startShimmerAnimation()
-        binding.ivDocumentImage.visibility = View.GONE
-        binding.layoutImageError.visibility = View.GONE
+        android.util.Log.d("DocumentPreview", "Loading image URL: $url")
 
-        Glide.with(binding.ivDocumentImage.context)
+        stopShimmerAnimation()
+
+        binding.ivDocumentImage.visibility = View.VISIBLE
+        binding.ivDocumentImage.setImageDrawable(null)
+        binding.layoutImageError.visibility = View.GONE
+        binding.scrollPdfContainer.visibility = View.GONE
+
+        startShimmerAnimation()
+
+        Glide.with(this)
             .load(url)
+            .placeholder(R.drawable.bg_shimmer_placeholder)
             .listener(object : RequestListener<Drawable> {
+
                 override fun onLoadFailed(
                     e: GlideException?,
                     model: Any?,
                     target: Target<Drawable>,
                     isFirstResource: Boolean
                 ): Boolean {
+                    android.util.Log.e(
+                        "DocumentPreview",
+                        "Image loading failed. URL: $url",
+                        e
+                    )
+
+                    e?.rootCauses?.forEach {
+                        android.util.Log.e("DocumentPreview", "Root cause: ${it.message}", it)
+                    }
+
                     stopShimmerAnimation()
-                    showImageError("Unable to load document preview. Please try again.")
+                    showImageError("Unable to load document preview.")
                     return false
                 }
 
                 override fun onResourceReady(
                     resource: Drawable,
                     model: Any,
-                    target: Target<Drawable>?,
+                    target: Target<Drawable?>?,
                     dataSource: DataSource,
                     isFirstResource: Boolean
                 ): Boolean {
+                    android.util.Log.d(
+                        "DocumentPreview",
+                        "Image loaded successfully. Source: $dataSource"
+                    )
+
                     stopShimmerAnimation()
                     binding.layoutImageError.visibility = View.GONE
                     binding.ivDocumentImage.visibility = View.VISIBLE
@@ -210,6 +269,7 @@ class DocumentPreviewFragment : Fragment() {
             })
             .into(binding.ivDocumentImage)
     }
+
 
     private fun startShimmerAnimation() {
         binding.shimmerViewImage.visibility = View.VISIBLE
@@ -233,6 +293,7 @@ class DocumentPreviewFragment : Fragment() {
 
     private fun showImageError(message: String) {
         binding.ivDocumentImage.visibility = View.GONE
+        binding.scrollPdfContainer.visibility = View.GONE
         binding.layoutImageError.visibility = View.VISIBLE
         binding.tvImageErrorMessage.text = message
     }
@@ -242,6 +303,7 @@ class DocumentPreviewFragment : Fragment() {
         _binding?.ivDocumentImage?.let {
             Glide.with(this).clear(it)
         }
+        _binding?.layoutPdfPages?.removeAllViews()
         _binding = null
         super.onDestroyView()
     }
