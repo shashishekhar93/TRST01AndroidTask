@@ -25,12 +25,13 @@ class EmployeeDetailsViewModel @Inject constructor(
     } else {
         combine(
             repository.observeEmployeeById(employeeId),
-            repository.observeDocumentsForEmployee(employeeId)
-        ) { employee, documents ->
+            repository.observeDocumentsForEmployee(employeeId),
+            repository.observeMapAreaForEmployee(employeeId)
+        ) { employee, documents, mapArea ->
             if (employee == null) {
                 EmployeeDetailsUiState.NotFound
             } else {
-                EmployeeDetailsUiState.Success(employee, documents)
+                EmployeeDetailsUiState.Success(employee, documents, mapArea)
             }
         }
     }.stateIn(

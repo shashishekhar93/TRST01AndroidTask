@@ -51,6 +51,23 @@
         <action
             android:id="@+id/action_employeeDetailsFragment_to_deleteEmployeeBottomSheet"
             app:destination="@id/deleteEmployeeBottomSheet" />
+        <action
+            android:id="@+id/action_employeeDetailsFragment_to_employeeMapFragment"
+            app:destination="@id/employeeMapFragment"
+            app:enterAnim="@android:anim/fade_in"
+            app:exitAnim="@android:anim/fade_out"
+            app:popEnterAnim="@android:anim/fade_in"
+            app:popExitAnim="@android:anim/fade_out" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/employeeMapFragment"
+        android:name="com.shekhar.trst01androidtask.ui.map.EmployeeMapFragment"
+        android:label="Employee Map Area"
+        tools:layout="@layout/fragment_employee_map">
+        <argument
+            android:name="employeeId"
+            app:argType="integer" />
     </fragment>
 
     <fragment

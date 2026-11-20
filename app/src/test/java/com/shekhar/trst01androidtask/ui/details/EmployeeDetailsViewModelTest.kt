@@ -31,6 +31,7 @@ class EmployeeDetailsViewModelTest {
     @Before
     fun setUp() {
         Dispatchers.setMain(testDispatcher)
+        every { repository.observeMapAreaForEmployee(any()) } returns MutableStateFlow(null)
     }
 
     @After

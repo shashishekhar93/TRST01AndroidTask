@@ -15,6 +15,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.shekhar.trst01androidtask.R
 import com.shekhar.trst01androidtask.data.local.entity.DocumentEntity
 import com.shekhar.trst01androidtask.data.local.entity.EmployeeEntity
+import com.shekhar.trst01androidtask.data.local.entity.MapAreaEntity
 import com.shekhar.trst01androidtask.databinding.FragmentEmployeeDetailsBinding
 import com.shekhar.trst01androidtask.util.DateFormatter
 import dagger.hilt.android.AndroidEntryPoint
@@ -65,6 +66,13 @@ class EmployeeDetailsFragment : Fragment() {
             val bundle = bundleOf("employeeId" to viewModel.employeeId)
             findNavController().navigate(
                 R.id.action_employeeDetailsFragment_to_deleteEmployeeBottomSheet,
+                bundle
+            )
+        }
+        binding.btnOpenMapArea.setOnClickListener {
+            val bundle = bundleOf("employeeId" to viewModel.employeeId)
+            findNavController().navigate(
+                R.id.action_employeeDetailsFragment_to_employeeMapFragment,
                 bundle
             )
         }
@@ -123,7 +131,18 @@ class EmployeeDetailsFragment : Fragment() {
 
                 bindEmployeeInfo(state.employee)
                 bindDocumentsInfo(state.documents)
+                bindMapAreaInfo(state.mapArea)
             }
+        }
+    }
+
+    private fun bindMapAreaInfo(mapArea: MapAreaEntity?) {
+        if (mapArea != null && mapArea.coordinates.isNotEmpty()) {
+            val count = mapArea.coordinates.size
+            val pointText = if (count == 1) "1 point" else "$count points"
+            binding.tvMapAreaStatus.text = "Area saved ($pointText)"
+        } else {
+            binding.tvMapAreaStatus.text = "No area saved"
         }
     }
 
